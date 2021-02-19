@@ -15,7 +15,11 @@ data:
     unit_base=8
     ioengine=libaio
     size={{workload_args.filesize}}
+{% if workload_args.prefill_bs is defined %}
+    bs={{workload_args.prefill_bs}}
+{% else %}
     bs=4096KiB
+{% endif %}
     iodepth=1
     direct=1
     numjobs=1
@@ -24,6 +28,10 @@ data:
     rw=write
     create_on_open=1
     fsync_on_close=1
+{% if workload_args.cmp_ratio is defined %}
+    buffer_compress_percentage={{ workload_args.cmp_ratio }}
+    buffer_pattern=0xdeadface
+{% endif %}
 {% endif %}
 {% if workload_args.bsrange is defined %}
 {% set loopvar = workload_args.bsrange %}
